@@ -1,0 +1,6 @@
+database/users.db
+.downloads/
+venv/
+.env
+__pycache__
+
