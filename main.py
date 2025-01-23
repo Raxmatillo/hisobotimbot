@@ -3,7 +3,7 @@ from aiogram.utils import executor
 from keyboards import register, panel
 import register_user
 import make_document
-from loader import dp, db
+from loader import dp, db, bot, ADMINS
 
 from os_funkctions import get_with_prefix
 
@@ -22,7 +22,7 @@ async def send_welcome(message: types.Message):
     else:
         full_name = message.from_user.full_name
         count = db.count_users()[0]
-        await message.answer(text=f"<b>{full_name}</b> bazaga qo'shildi.\nBazada {count} foydalanuvchi bor")
+        await bot.send_message(chat_id=ADMINS[0], text=f"<b>{full_name}</b> bazaga qo'shildi.\nBazada {count} foydalanuvchi bor")
         await message.answer("Assalomu alaykum!\n\nBotdan to'liq foydalanish uchun ro'yxatdan o'tishingiz kerak!", reply_markup=register)
 
 # from aiogram.dispatcher import FSMContext
