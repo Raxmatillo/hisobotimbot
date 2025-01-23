@@ -17,13 +17,13 @@ async def request_region(message: types.Message, state: FSMContext):
 @dp.message_handler(state="region", content_types='text')
 async def request_district(message: types.Message, state: FSMContext):
     await state.update_data(region=message.text)
-    await message.answer("Tuman/shahar kiriting")
+    await message.answer("Hududingizni tuman/shahar nomi bilan kiriting\nMasalan: Shahrixon tumani, Farg'ona shahri")
     await state.set_state("district")
 
 @dp.message_handler(state="district", content_types='text')
 async def request_school_number(message: types.Message, state: FSMContext):
     await state.update_data(district=message.text)
-    await message.answer("Maktab raqamini kiriting\nMasalan: 56")
+    await message.answer("Maktab yoki DIMIni quyidagicha kiriting\<i>56-maktab, 26-DIMI</i>")
     await state.set_state("school_number")
 
 @dp.message_handler(state="school_number", content_types='text')
@@ -64,7 +64,7 @@ async def request_year(message: types.Message, state: FSMContext):
     text = "<b>Ma'lumotlarni tasdiqlaysizmi</b>\n\n"
     text += f"Viloyat: {region}\n"\
             f"Tuman/shahar: {district}\n"\
-            f"Maktab: {school_number}-maktab\n"\
+            f"Maktab: {school_number}\n"\
             f"O'qituvchi: {teacher}\n"\
             f"Lavozimi: {position}\n"\
             f"Maktab direktori: {director}\n"\
@@ -88,7 +88,7 @@ async def verified(message: types.Message, state: FSMContext):
             db.update_user(
                 region=region,
                 district=district,
-                school_number=int(school_number),
+                school_number=school_number,
                 teacher_name=teacher,
                 position=position,
                 director_name=director,
@@ -100,7 +100,7 @@ async def verified(message: types.Message, state: FSMContext):
                 telegram_id=message.from_user.id,
                 region=region,
                 district=district,
-                school_number=int(school_number),
+                school_number=school_number,
                 teacher_name=teacher,
                 position=position,
                 director_name=director,

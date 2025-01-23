@@ -142,7 +142,7 @@ async def over_(message: types.Message, state: FSMContext):
     generate_monthly_report(
         region=region,
         district=district,
-        school_number=int(school_number),
+        school_number=school_number,
         teacher_name=teacher,
         position=position,
         director_name=director,

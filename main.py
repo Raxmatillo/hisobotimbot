@@ -45,7 +45,7 @@ async def myProfile(message: types.Message):
     text = "<b>ℹ️ Ma'lumotlarim</b>\n\n"
     text += f"<b>Viloyat:</b> {region.capitalize()}\n"\
             f"<b>Tuman/shahar:</b> {district.capitalize()}\n"\
-            f"<b>Maktab:</b> {school_number}-maktab\n"\
+            f"<b>Maktab|DIMI:</b> {school_number}\n"\
             f"<b>O'qituvchi:</b> {teacher}\n"\
             f"<b>Lavozimi:</b> {position}\n"\
             f"<b>Maktab direktori:</b> {director}\n"\

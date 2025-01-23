@@ -28,12 +28,12 @@ class MonthlyReportGenerator:
         style.font.size = Pt(14)
         style.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY  # Justify qilib tekkizlash
 
-    def create_header(self, region: str, district: str, school_number: int, teacher_name: str, position: str, month: str, year: str):
+    def create_header(self, region: str, district: str, school_number: str, teacher_name: str, position: str, month: str, year: str):
         """Hisobot sarlavhasini yaratish"""
         month_name = month.title()
         header_text = (
-            f"\n\n\n\n\n\n{region.capitalize()} viloyati {district.capitalize()} MMT \nbo'limiga qarashli {school_number}-maktabi "
-            f"{position}i {teacher_name}ning\n {year} o'quv yilining "
+            f"\n\n\n\n\n\n{region.capitalize()} viloyati {district.capitalize()} MMT \nbo'limiga qarashli {school_number}"
+            f"{position} {teacher_name}ning\n {year} o'quv yilining "
             f"{month_name} oyida \namalga oshirgan ishlari yuzasidan\n"
         )
     
@@ -90,7 +90,7 @@ class MonthlyReportGenerator:
 def generate_monthly_report(
     region: str,
     district: str,
-    school_number: int,
+    school_number: str,
     teacher_name: str,
     position: str,
     director_name: str,
@@ -109,7 +109,6 @@ def generate_monthly_report(
     :param activities: Faoliyatlar ro'yxati [{'title': str, 'description': str, 'image': str}]
     :param output_file: Fayl nomi
     """
-    print(activities)
     report = MonthlyReportGenerator()
     
     # Sarlavha qo'shish
