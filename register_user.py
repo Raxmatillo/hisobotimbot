@@ -9,7 +9,7 @@ async def cancel_handler(message: types.Message, state: FSMContext):
     await state.finish()
     await message.answer("Amaliyot bekor qilindi\nBosh menyu uchun /start bosing", reply_markup=types.ReplyKeyboardRemove())
 
-@dp.message_handler(text="Ro'yxatdan o'tish")
+@dp.message_handler(text="Ro'yxatdan o'tish 👤")
 async def request_region(message: types.Message, state: FSMContext):
     await message.answer("Maktab joylashgan viloyatni yozing", reply_markup=cancel)
     await state.set_state("region")
@@ -23,7 +23,7 @@ async def request_district(message: types.Message, state: FSMContext):
 @dp.message_handler(state="district", content_types='text')
 async def request_school_number(message: types.Message, state: FSMContext):
     await state.update_data(district=message.text)
-    await message.answer("Maktab yoki DIMIni quyidagicha kiriting\<i>56-maktab, 26-DIMI</i>")
+    await message.answer("Maktab yoki DIMIni quyidagicha kiriting\n<i>56-maktab, 26-DIMI</i>")
     await state.set_state("school_number")
 
 @dp.message_handler(state="school_number", content_types='text')

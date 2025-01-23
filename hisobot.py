@@ -32,7 +32,7 @@ class MonthlyReportGenerator:
         """Hisobot sarlavhasini yaratish"""
         month_name = month.title()
         header_text = (
-            f"\n\n\n\n\n\n{region.capitalize()} viloyati {district.capitalize()} MMT \nbo'limiga qarashli {school_number}"
+            f"\n\n\n\n\n\n{region.capitalize()} viloyati {district.capitalize()} MMT \nbo'limiga qarashli {school_number} "
             f"{position} {teacher_name}ning\n {year} o'quv yilining "
             f"{month_name} oyida \namalga oshirgan ishlari yuzasidan\n"
         )
@@ -78,7 +78,7 @@ class MonthlyReportGenerator:
         signature.add_run(director_name)
 
         teacher_sign = self.document.add_paragraph(style='NormalText')
-        teacher_sign.add_run(f"Maktab {position}i: ").bold = True
+        teacher_sign.add_run(f"Maktab {position}: ").bold = True
         teacher_sign.add_run(teacher_name)
 
     def save(self, filename: str):
