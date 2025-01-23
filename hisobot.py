@@ -32,8 +32,8 @@ class MonthlyReportGenerator:
         """Hisobot sarlavhasini yaratish"""
         month_name = month.title()
         header_text = (
-            f"\n\n\n\n\n\n{region.title()} viloyati {district.title()} tumani MMT \nbo'limiga qarashli {school_number}-maktabi "
-            f"{position}i\n {teacher_name}ning \n{year} o'quv yilining "
+            f"\n\n\n\n\n\n{region.capitalize()} viloyati {district.capitalize()} MMT \nbo'limiga qarashli {school_number}-maktabi "
+            f"{position}i {teacher_name}ning\n {year} o'quv yilining "
             f"{month_name} oyida \namalga oshirgan ishlari yuzasidan\n"
         )
     
@@ -109,11 +109,10 @@ def generate_monthly_report(
     :param activities: Faoliyatlar ro'yxati [{'title': str, 'description': str, 'image': str}]
     :param output_file: Fayl nomi
     """
-    print('region', region)
+    print(activities)
     report = MonthlyReportGenerator()
-    print(report)
+    
     # Sarlavha qo'shish
-    print(region, district, school_number, teacher_name, position, month, year, end="\n")
     report.create_header(
         region=region,
         district=district,
@@ -123,16 +122,14 @@ def generate_monthly_report(
         month=month,
         year=year
     )
-    print('yes')
+    
     # Faoliyatlarni qo'shish
     for activity in activities:
-        print('here activity', activity)
         report.add_activity(
             title=activity["title"],
             description=activity['description'],
             image_paths=activity['image']  # Rasmlar ro'yxati
         )
-        print(report)
 
  
     # Imzolarni qo'shish

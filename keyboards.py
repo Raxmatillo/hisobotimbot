@@ -39,8 +39,8 @@ panel = ReplyKeyboardMarkup(
 continue_or_no = ReplyKeyboardMarkup(
     keyboard=[
         [
-            KeyboardButton("Davom etamiz"),
-            KeyboardButton("Yakunlash")
+            KeyboardButton("Davom etamiz 🔄"),
+            KeyboardButton("Yakunlash 💾")
         ]
     ], resize_keyboard=True
 )

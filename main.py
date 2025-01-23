@@ -20,6 +20,9 @@ async def send_welcome(message: types.Message):
     if user:
         await message.answer("Siz asosiy oynadasiz 😊", reply_markup=panel)
     else:
+        full_name = message.from_user.full_name
+        count = db.count_users()[0]
+        await message.answer(text=f"<b>{full_name}</b> bazaga qo'shildi.\nBazada {count} foydalanuvchi bor")
         await message.answer("Assalomu alaykum!\n\nBotdan to'liq foydalanish uchun ro'yxatdan o'tishingiz kerak!", reply_markup=register)
 
 # from aiogram.dispatcher import FSMContext
@@ -39,19 +42,24 @@ async def myProfile(message: types.Message):
     position = user[6]
     director = user[7]
     year = user[8]
-    text = "<b>Ma'lumotlarim</b>\n\n"
-    text += f"Viloyat: {region}\n"\
-            f"Tuman/shahar: {district}\n"\
-            f"Maktab: {school_number}-maktab\n"\
-            f"O'qituvchi: {teacher}\n"\
-            f"Lavozimi: {position}\n"\
-            f"Maktab direktori: {director}\n"\
-            f"O'quv yili: {year}\n"
+    text = "<b>ℹ️ Ma'lumotlarim</b>\n\n"
+    text += f"<b>Viloyat:</b> {region.capitalize()}\n"\
+            f"<b>Tuman/shahar:</b> {district.capitalize()}\n"\
+            f"<b>Maktab:</b> {school_number}-maktab\n"\
+            f"<b>O'qituvchi:</b> {teacher}\n"\
+            f"<b>Lavozimi:</b> {position}\n"\
+            f"<b>Maktab direktori:</b> {director}\n"\
+            f"<b>O'quv yili:</b> {year}\n"
     await message.answer(text=text)
 
 @dp.message_handler(text="🔄 Ma'lumotlarimni yangilash")
 async def update_mydata(message: types.Message):
     await message.answer("Ma'lumotlarni yangilash uchun qayta ro'yxatdan o'tishingiz kerak.\nAgar rostan ham yangilamoqchi bo'lsangiz quyidagi tugmani bosing!\n\nBosh menyu uchun /start", reply_markup=register)
+
+
+@dp.message_handler(state=None)
+async def echo(message: types.Message):
+    await message.answer('/start buyrug\'ini bosing 🙂')
 
 # Botni ishga tushirish
 if __name__ == '__main__':

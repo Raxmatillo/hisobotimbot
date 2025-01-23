@@ -2,9 +2,9 @@ import os
 import logging
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from keyboards import continue_or_no
-from loader import db, dp, bot, BOT_TOKEN
-from os_funkctions import delete_files_with_prefix, get_with_prefix
+from keyboards import continue_or_no, panel
+from loader import db, dp, bot
+from os_funkctions import delete_files_with_prefix, get_with_prefix, get_with_prefix_collages
 from hisobot import generate_monthly_report
 from collage import create_telegram_collage
 
@@ -15,13 +15,14 @@ if not os.path.exists(DOWNLOAD_FOLDER):
 
 @dp.message_handler(text="📝 Hisobot yozish")
 async def make_doc(message: types.Message, state: FSMContext):
-    await message.answer("Hisobot oyligini yozing, oy nomi:")
+    db.delete_user_documents(telegram_id=message.from_user.id)
+    await message.answer("Hisobot oyligini yozing, oy nomi:", reply_markup=types.ReplyKeyboardRemove())
     await state.set_state("month")
 
 @dp.message_handler(state="month", content_types='text')
 async def req_title(message: types.Message, state: FSMContext):
     await state.update_data(month=message.text.title())
-    await message.answer("Sarlavha yozing (maksimal 60 ta belgi)", reply_markup=types.ReplyKeyboardRemove())
+    await message.answer("Sarlavha yozing (maksimal 60 ta belgi)")
     await state.set_state("title")
 
 @dp.message_handler(state="title", content_types="text")
@@ -49,7 +50,6 @@ async def req_photos(message: types.Message, state: FSMContext):
 @dp.message_handler(state="images", content_types='photo')
 async def handle_photo(message: types.Message, state: FSMContext):
     try:
-        # Rasmlarni eng katta o'lchamda olish
         photos = message.photo
         file_info = await bot.get_file(photos[-1].file_id)
         file_path = file_info.file_path
@@ -68,20 +68,19 @@ async def handle_photo(message: types.Message, state: FSMContext):
 
 
 
-@dp.message_handler(state="is_continue", text="Davom etamiz")
+@dp.message_handler(state="is_continue", text="Davom etamiz 🔄")
 async def to_continue(message: types.Message, state: FSMContext):
     photo_path = get_with_prefix(prefix=str(message.from_user.id))
     photo_name = f"{message.from_user.id}_{message.message_id}.jpg"
-    await state.update_data(image=photo_name)
-    
+    # await state.update_data(image=photo_name)
     create_telegram_collage(images=photo_path, output_path=photo_name)
-    print(photo_path, f"{message.from_user.id}")
     delete_files_with_prefix(photo_path)
     
     data = await state.get_data()
     title = data["title"]
     descr = data["descr"]
     month = data["month"]
+
     db.add_document(
         telegram_id=message.from_user.id,
         title=title,
@@ -89,15 +88,17 @@ async def to_continue(message: types.Message, state: FSMContext):
         images=photo_name,
         month=month
     )
-    # os.remove(photo_name)
-    await message.answer("Sarlavha yozing")
+    
+    await message.answer("Sarlavha yozing", reply_markup=types.ReplyKeyboardRemove())
     await state.set_state("title")
 
 
 
-@dp.message_handler(state="is_continue", text="Yakunlash")
+@dp.message_handler(state="is_continue", text="Yakunlash 💾")
 async def over_(message: types.Message, state: FSMContext):
+    xabar = await message.answer("Yozilmoqda, iltimos kutib turing...")
     photo_path = get_with_prefix(prefix=str(message.from_user.id))
+    
     photo_name = f"{message.from_user.id}_{message.message_id}.jpg"
     photo_name = f"{message.from_user.id}_{345}.jpg"
     # await state.update_data(image=photo_name)
@@ -110,6 +111,7 @@ async def over_(message: types.Message, state: FSMContext):
     descr = data["descr"]
     month = data["month"]
 
+    await state.finish()
     db.add_document(
         telegram_id=message.from_user.id,
         title=title,
@@ -136,7 +138,7 @@ async def over_(message: types.Message, state: FSMContext):
         data["description"] = document[3]
         data["image"] = document[4]
         activities.append(data)
-    print(activities,'activities')
+    print(f"{activities=}")
     generate_monthly_report(
         region=region,
         district=district,
@@ -148,8 +150,17 @@ async def over_(message: types.Message, state: FSMContext):
         year=year,
         activities=activities
     )
-    
+
+    await xabar.delete()
     doc_name = f"@hisobotimbot-{teacher}_{month}.docx"
-    await message.answer_document(document=types.InputFile(doc_name), caption="@hisobotimbot")
+    await message.answer_document(document=types.InputFile(doc_name), caption="@hisobotimbot", reply_markup=panel)
+
+    photo_path = get_with_prefix_collages(prefix=str(message.from_user.id))
+    delete_files_with_prefix(photo_path)
+    db.delete_user_documents(telegram_id=message.from_user.id)
     os.remove(doc_name)
 
+
+@dp.message_handler(state="images", content_types='text')
+async def unknown(message: types.Message):
+    await message.answer("Iltimos, faqat rasm yuboring (maksimal 5 ta)")

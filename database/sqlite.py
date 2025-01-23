@@ -145,12 +145,18 @@ class Database:
         """
         self.execute(sql, parameters=(telegram_id, title, text, images, month), commit=True)
 
+    def get_max_id(self):
+        return self.execute("SELECT MAX(id) FROM documents;", fetchone=True)
+    
     def select_document(self, telegram_id: int):
         sql = "SELECT * FROM documents WHERE telegram_id=?"
         return self.execute(sql, parameters=(telegram_id, ), fetchall=True)
 
     def delete_documents(self):
         self.execute("DROP TABLE documents", commit=True)
+
+    def delete_user_documents(self, telegram_id):
+        self.execute(f"DELETE FROM documents WHERE telegram_id=?", parameters=(telegram_id, ), commit=True)
 
 def logger(statement):
     print(f"""

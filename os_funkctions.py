@@ -25,3 +25,13 @@ def get_with_prefix(directory: str=DOWNLOAD_FOLDER, prefix: str=""):
     return path
 
 
+def get_with_prefix_collages(directory: str=".", prefix: str=""):
+    path = []
+    for filename in os.listdir(directory):
+        # Fayl nomi prefix bilan boshlashini tekshirish
+        if filename.startswith(prefix):
+            file_path = os.path.join(directory, filename)
+            path.append(file_path)
+    return path
+
+

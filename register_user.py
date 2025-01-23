@@ -7,7 +7,7 @@ from keyboards import yes_or_no, register, cancel, panel
 @dp.message_handler(state="*", text="🔙 Bekor qilish")
 async def cancel_handler(message: types.Message, state: FSMContext):
     await state.finish()
-    await message.answer("Amaliyot bekor qilindi", reply_markup=types.ReplyKeyboardRemove())
+    await message.answer("Amaliyot bekor qilindi\nBosh menyu uchun /start bosing", reply_markup=types.ReplyKeyboardRemove())
 
 @dp.message_handler(text="Ro'yxatdan o'tish")
 async def request_region(message: types.Message, state: FSMContext):
@@ -35,7 +35,7 @@ async def request_teacher(message: types.Message, state: FSMContext):
 @dp.message_handler(state="teacher", content_types='text')
 async def request_position(message: types.Message, state: FSMContext):
     await state.update_data(teacher=message.text.title())
-    await message.answer("Lavozim\nMasalan: amaliyotchi psixolog")
+    await message.answer("Qanday lavozimda ishlaysiz\nMasalan: amaliyotchi psixologi, informatika o'qituvchisi....")
     await state.set_state("position")
 
 @dp.message_handler(state="position", content_types='text')
